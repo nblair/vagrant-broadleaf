@@ -14,7 +14,7 @@ Package {
 }
 package { 'maven':
   install_options => ['--no-install-recommends'],
-  require => [Package['oracle-java7-installer'], Exec['accept-java-license']]
+  require => [Package['oracle-java7-installer'], Exec['accept-java-license'], File['/etc/environment']]
 }
 package { "ant":
   before => Package['oracle-java7-installer'],
@@ -74,24 +74,23 @@ file { '/etc/init.d/broadleaf-demo':
   mode => "0755"
 }
 
+file { '/etc/init.d/broadleaf-demo-admin':
+  source => "/vagrant/broadleaf-demo-admin.initscript",
+  mode => "0755"
+}
+
 service { 'broadleaf-demo':
   ensure => running,
   enable => true,
   hasstatus => false,
   require => [File['/etc/init.d/broadleaf-demo'], Package['maven'], Exec['mvn install']]
 }
-
-#TODO: make a similar init script for the admin project
-#service { 'jetty-admin':
-#  provider => 'base',
-#  ensure => running,
-#  enable => true,
-#  start => 'cd /vagrant/eclipse-workspace/DemoSite/admin; ant jetty-demo',
-#  stop => 'cd /vagrant/eclipse-workspace/DemoSite/admin; ant jetty-stop',
-#  hasstatus => false,
-#  pattern => 'address=8001',
-#  require => Service['jetty-site'],
-#}
+service { 'broadleaf-demo-admin':
+  ensure => running,
+  enable => true,
+  hasstatus => false,
+  require => [File['/etc/init.d/broadleaf-demo-admin'], Package['maven'], Exec['mvn install'], Service['broadleaf-demo']]
+}
 
 #TODO: consider setting up jetty or tomcat as a service
 #package { 'jetty8':

@@ -1,10 +1,10 @@
 #!/bin/sh -e
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-NAME=broadleaf-demo
-DESC="Broadleaf Jetty Demo on localhost:8080 (could take several minutes to start)"
+NAME=broadleaf-demo-admin
+DESC="Broadleaf Jetty Demo Admin on localhost:8444 (could take several minutes to start)"
 PROJECTDIR=/vagrant/eclipse-workspace/DemoSite
-JETTY_HOME=/vagrant/eclipse-workspace/DemoSite/site
+JETTY_HOME=/vagrant/eclipse-workspace/DemoSite/admin
 JETTY_USER=vagrant
 PIDFILE=$JETTY_HOME/pidfile
 
