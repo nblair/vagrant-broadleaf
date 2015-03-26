@@ -1,0 +1,61 @@
+#!/bin/sh -e
+
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+NAME=broadleaf-demo-admin
+DESC="Broadleaf Jetty Demo Admin on localhost:8444 (could take several minutes to start)"
+PROJECTDIR=/vagrant/eclipse-workspace/DemoSite
+JETTY_HOME=/vagrant/eclipse-workspace/DemoSite/admin
+JETTY_USER=vagrant
+PIDFILE=$JETTY_HOME/pidfile
+
+if [ `id -u` -ne 0 ]; then
+        echo "You need root privileges to run this script"
+        exit 1
+fi
+
+# Make sure jetty is started with system locale
+if [ -r /etc/default/locale ]; then
+        . /etc/default/locale
+        export LANG
+fi
+
+. /lib/lsb/init-functions
+
+if [ -r /etc/default/rcS ]; then
+        . /etc/default/rcS
+fi
+
+##################################################
+# Do the action
+##################################################
+case "$1" in
+  start)
+        log_daemon_msg "Starting $DESC." "$NAME"
+        if [ ! -d "/home/$JETTY_USER/.m2/repository" ]; then
+                log_daemon_msg "Initializing maven repository."
+                su $JETTY_USER -c "cd $PROJECTDIR; mvn install"
+        fi
+	# running under bash -c exec gives the right pid and allows output to be captured
+        start-stop-daemon --start --pidfile "$PIDFILE" --chuid "$JETTY_USER" \
+                --chdir "$JETTY_HOME" --background --make-pidfile \
+                --startas /bin/bash -- -c "exec /usr/bin/ant jetty-demo > stdout.log 2>&1"
+        ;;
+
+  stop)
+        log_daemon_msg "Stopping $DESC." "$NAME"
+        cd $JETTY_HOME; ant jetty-stop
+	# jetty-stop should have stopped it gracefully, but I'm including the daemon approach for good measure / reference
+        log_progress_msg " (killing) "
+        start-stop-daemon --stop --signal 9 --oknodo \
+                --quiet --pidfile "$PIDFILE" \
+                --user "$JETTY_USER"
+        ;;
+
+  *)
+        log_success_msg "Usage: $0 {start|stop}"
+        exit 1
+        ;;
+esac
+
+exit 0
+

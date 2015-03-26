@@ -17,25 +17,16 @@ Warning: The virtual machine that will be provisioned by vagrant will have 2 GB 
 
 Be prepared to wait; the first launch of the site may take a good 15 minutes.
 
-### Starting the site
-
-TODO Work is in progress to obviate these steps.
-
-Once the host is up, you will need to ssh into the host and start up the 2 applications.
-
-Starting the site (current working directory of this project):
-
-1. vagrant ssh
-2. cd /vagrant/eclipse-workspace/DemoSite/site
-3. ant jetty-demo
-
-Starting the admin console (separate terminal, current working directory of this project):
-
-1. vagrant ssh
-2. cd /vagrant/eclipse-workspace/DemoSite/admin
-3. ant jetty-demo
-
 ### Using
 
 To access the site, point your browser at http://localhost:8080.
 To access the admin console, point your browser at https://localhost:8444/admin. Log in with username *admin* and password *admin*.
+
+### Debugging
+
+The first lauch can take a very long time to start up, but if something does seem amiss, you can check that the service is running and look at its log for problems.
+
+1. Use `vagrant ssh` to login to the virtual machine.
+2. Verify that broadleaf is running: `pgrep -lf jetty`
+3. Its output can be found in /vagrant/eclipse-workspace/DemoSite/site/stdout.log
+
