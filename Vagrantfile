@@ -6,6 +6,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "ubuntu/trusty64"
   config.vm.hostname = "broadleaf"
   config.vm.network "forwarded_port", guest: 8080, host: 8080
+  config.vm.network "forwarded_port", guest: 8444, host: 8444
 
   config.vm.provider :virtualbox do |vb|
   	vb.memory = 2048

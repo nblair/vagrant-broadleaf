@@ -19,8 +19,8 @@ Be prepared to wait; the first launch of the site may take a good 15 minutes.
 
 ### Using
 
-To access the site, point your browser at http://localhost:8080.
-To access the admin console, point your browser at https://localhost:8444/admin. Log in with username *admin* and password *admin*.
+To access the site, point your browser at [http://localhost:8080](http://localhost:8080).
+To access the admin console, point your browser at [https://localhost:8444/admin](https://localhost:8444/admin). Log in with username *admin* and password *admin*.
 
 ### Debugging
 
